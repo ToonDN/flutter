@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -46,7 +46,7 @@ enum SnackBarBehavior {
 ///
 ///  * [ThemeData], which describes the overall theme information for the
 ///    application.
-class SnackBarThemeData with Diagnosticable {
+class SnackBarThemeData extends Diagnosticable {
 
   /// Creates a theme that can be used for [ThemeData.snackBarTheme].
   ///
@@ -156,19 +156,19 @@ class SnackBarThemeData with Diagnosticable {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     if (identical(this, other))
       return true;
     if (other.runtimeType != runtimeType)
       return false;
-    return other is SnackBarThemeData
-        && other.backgroundColor == backgroundColor
-        && other.actionTextColor == actionTextColor
-        && other.disabledActionTextColor == disabledActionTextColor
-        && other.contentTextStyle == contentTextStyle
-        && other.elevation == elevation
-        && other.shape == shape
-        && other.behavior == behavior;
+    final SnackBarThemeData typedOther = other;
+    return typedOther.backgroundColor == backgroundColor
+        && typedOther.actionTextColor == actionTextColor
+        && typedOther.disabledActionTextColor == disabledActionTextColor
+        && typedOther.contentTextStyle == contentTextStyle
+        && typedOther.elevation == elevation
+        && typedOther.shape == shape
+        && typedOther.behavior == behavior;
   }
 
   @override

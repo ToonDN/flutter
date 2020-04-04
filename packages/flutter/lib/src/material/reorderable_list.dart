@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -27,7 +27,7 @@ import 'material_localizations.dart';
 ///
 /// {@youtube 560 315 https://www.youtube.com/watch?v=3fB1mxOsqJE}
 ///
-/// {@tool snippet}
+/// {@tool sample}
 ///
 /// ```dart
 /// final List<MyDataObject> backingList = <MyDataObject>[/* ... */];
@@ -55,16 +55,14 @@ typedef ReorderCallback = void Function(int oldIndex, int newIndex);
 ///
 /// {@youtube 560 315 https://www.youtube.com/watch?v=3fB1mxOsqJE}
 class ReorderableListView extends StatefulWidget {
-
   /// Creates a reorderable list.
   ReorderableListView({
-    Key key,
     this.header,
     @required this.children,
     @required this.onReorder,
-    this.scrollController,
     this.scrollDirection = Axis.vertical,
     this.padding,
+    this.physics,
     this.reverse = false,
   }) : assert(scrollDirection != null),
        assert(onReorder != null),
@@ -72,13 +70,14 @@ class ReorderableListView extends StatefulWidget {
        assert(
          children.every((Widget w) => w.key != null),
          'All children of this widget must have a key.',
-       ),
-       super(key: key);
+       );
 
   /// A non-reorderable header widget to show before the list.
   ///
   /// If null, no header will appear before the list.
   final Widget header;
+
+  final ScrollPhysics physics;
 
   /// The widgets to display.
   final List<Widget> children;
@@ -87,15 +86,6 @@ class ReorderableListView extends StatefulWidget {
   ///
   /// List [children] can only drag along this [Axis].
   final Axis scrollDirection;
-
-  /// Creates a [ScrollPosition] to manage and determine which portion
-  /// of the content is visible in the scroll view.
-  ///
-  /// This can be used in many ways, such as setting an initial scroll offset,
-  /// (via [ScrollController.initialScrollOffset]), reading the current scroll position
-  /// (via [ScrollController.offset]), or changing it (via [ScrollController.jumpTo] or
-  /// [ScrollController.animateTo]).
-  final ScrollController scrollController;
 
   /// The amount of space by which to inset the [children].
   final EdgeInsets padding;
@@ -150,11 +140,13 @@ class _ReorderableListViewState extends State<ReorderableListView> {
         return _ReorderableListContent(
           header: widget.header,
           children: widget.children,
-          scrollController: widget.scrollController,
           scrollDirection: widget.scrollDirection,
           onReorder: widget.onReorder,
           padding: widget.padding,
           reverse: widget.reverse,
+          physics: widget.physics,
+          
+          
         );
       },
     );
@@ -176,20 +168,21 @@ class _ReorderableListContent extends StatefulWidget {
   const _ReorderableListContent({
     @required this.header,
     @required this.children,
-    @required this.scrollController,
     @required this.scrollDirection,
     @required this.padding,
     @required this.onReorder,
     @required this.reverse,
+    @required this.physics,
+
   });
 
   final Widget header;
   final List<Widget> children;
-  final ScrollController scrollController;
   final Axis scrollDirection;
   final EdgeInsets padding;
   final ReorderCallback onReorder;
   final bool reverse;
+  final ScrollPhysics physics;
 
   @override
   _ReorderableListContentState createState() => _ReorderableListContentState();
@@ -275,7 +268,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent> with T
 
   @override
   void didChangeDependencies() {
-    _scrollController = widget.scrollController ?? PrimaryScrollController.of(context) ?? ScrollController();
+    _scrollController = PrimaryScrollController.of(context) ?? ScrollController();
     super.didChangeDependencies();
   }
 
@@ -395,6 +388,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent> with T
     // Drops toWrap into the last position it was hovering over.
     void onDragEnded() {
       reorder(_dragStartIndex, _currentIndex);
+      _scrollController.animateTo(1, duration: Duration(milliseconds: 5), curve: Curves.ease);
     }
 
     Widget wrapWithSemantics() {
@@ -433,6 +427,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent> with T
         }
         semanticsActions[CustomSemanticsAction(label: reorderItemAfter)] = moveAfter;
         semanticsActions[CustomSemanticsAction(label: localizations.reorderItemToEnd)] = moveToEnd;
+        
       }
 
       // We pass toWrap with a GlobalKey into the Draggable so that when a list
@@ -545,7 +540,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent> with T
           return _dragging == toAccept && toAccept != toWrap.key;
         },
         onAccept: (Key accepted) { },
-        onLeave: (Object leaving) { },
+        onLeave: (Key leaving) { },
       );
     });
   }
@@ -575,6 +570,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent> with T
           break;
       }
       return SingleChildScrollView(
+        physics: widget.physics ?? widget.physics,
         scrollDirection: widget.scrollDirection,
         padding: widget.padding,
         controller: _scrollController,

@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -18,8 +18,8 @@ import 'theme.dart';
 /// When Shape is `null`, the dialog defaults to a [RoundedRectangleBorder] with
 /// a border radius of 2.0 on all corners.
 ///
-/// [titleTextStyle] and [contentTextStyle] are used in [AlertDialog]s.
-/// If null, they default to [TextTheme.headline6] and [TextTheme.subtitle1],
+/// [titleTextStyle] and [contentTextStyle] are used in [AlertDialogs].
+/// If null, they default to [ThemeData.textTheme.title] and [ThemeData.textTheme.subhead],
 /// respectively.
 ///
 /// See also:
@@ -27,7 +27,7 @@ import 'theme.dart';
 ///  * [Dialog], a material dialog that can be customized using this [DialogTheme].
 ///  * [ThemeData], which describes the overall theme information for the
 ///    application.
-class DialogTheme with Diagnosticable {
+class DialogTheme extends Diagnosticable {
   /// Creates a dialog theme that can be used for [ThemeData.dialogTheme].
   const DialogTheme({
     this.backgroundColor,
@@ -53,12 +53,12 @@ class DialogTheme with Diagnosticable {
 
   /// Used to configure the [DefaultTextStyle] for the [AlertDialog.title] widget.
   ///
-  /// If null, defaults to [ThemeData.textTheme.headline6].
+  /// If null, defaults to [ThemeData.textTheme.title].
   final TextStyle titleTextStyle;
 
   /// Used to configure the [DefaultTextStyle] for the [AlertDialog.content] widget.
   ///
-  /// If null, defaults to [ThemeData.textTheme.subtitle1].
+  /// If null, defaults to [ThemeData.textTheme.subhead].
   final TextStyle contentTextStyle;
 
   /// Creates a copy of this object but with the given fields replaced with the
@@ -104,17 +104,17 @@ class DialogTheme with Diagnosticable {
   int get hashCode => shape.hashCode;
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     if (identical(this, other))
       return true;
     if (other.runtimeType != runtimeType)
       return false;
-    return other is DialogTheme
-        && other.backgroundColor == backgroundColor
-        && other.elevation == elevation
-        && other.shape == shape
-        && other.titleTextStyle == titleTextStyle
-        && other.contentTextStyle == contentTextStyle;
+    final DialogTheme typedOther = other;
+    return typedOther.backgroundColor == backgroundColor
+        && typedOther.elevation == elevation
+        && typedOther.shape == shape
+        && typedOther.titleTextStyle == titleTextStyle
+        && typedOther.contentTextStyle == contentTextStyle;
   }
 
   @override

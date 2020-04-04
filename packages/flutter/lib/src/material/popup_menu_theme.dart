@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -29,7 +29,7 @@ import 'theme.dart';
 ///
 ///  * [ThemeData], which describes the overall theme information for the
 ///    application.
-class PopupMenuThemeData with Diagnosticable {
+class PopupMenuThemeData extends Diagnosticable {
   /// Creates the set of properties used to configure [PopupMenuTheme].
   const PopupMenuThemeData({
     this.color,
@@ -99,11 +99,11 @@ class PopupMenuThemeData with Diagnosticable {
       return true;
     if (other.runtimeType != runtimeType)
       return false;
-    return other is PopupMenuThemeData
-        && other.elevation == elevation
-        && other.color == color
-        && other.shape == shape
-        && other.textStyle == textStyle;
+    final PopupMenuThemeData typedOther = other;
+    return typedOther.elevation == elevation
+        && typedOther.color == color
+        && typedOther.shape == shape
+        && typedOther.textStyle == textStyle;
   }
 
   @override

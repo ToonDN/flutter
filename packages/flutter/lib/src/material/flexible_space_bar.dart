@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -50,7 +50,7 @@ enum StretchMode {
 /// [FlexibleSpaceBar.createSettings], to convey sizing information down to the
 /// [FlexibleSpaceBar].
 ///
-/// {@tool dartpad --template=freeform}
+/// {@tool snippet --template=freeform}
 /// This sample application demonstrates the different features of the
 /// [FlexibleSpaceBar] when used in a [SliverAppBar]. This app bar is configured
 /// to stretch into the overscroll space, and uses the
@@ -166,7 +166,7 @@ class FlexibleSpaceBar extends StatefulWidget {
   /// Whether the title should be centered.
   ///
   /// By default this property is true if the current target platform
-  /// is [TargetPlatform.iOS] or [TargetPlatform.macOS], false otherwise.
+  /// is [TargetPlatform.iOS], false otherwise.
   final bool centerTitle;
 
   /// Collapse effect while scrolling.
@@ -188,7 +188,7 @@ class FlexibleSpaceBar extends StatefulWidget {
   ///
   /// By default the value of this property is
   /// `EdgeInsetsDirectional.only(start: 72, bottom: 16)` if the title is
-  /// not centered, `EdgeInsetsDirectional.only(start: 0, bottom: 16)` otherwise.
+  /// not centered, `EdgeInsetsDirectional.only(start 0, bottom: 16)` otherwise.
   final EdgeInsetsGeometry titlePadding;
 
   /// Wraps a widget that contains an [AppBar] to convey sizing information down
@@ -237,11 +237,8 @@ class _FlexibleSpaceBarState extends State<FlexibleSpaceBar> {
     switch (theme.platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
-      case TargetPlatform.linux:
-      case TargetPlatform.windows:
         return false;
       case TargetPlatform.iOS:
-      case TargetPlatform.macOS:
         return true;
     }
     return null;
@@ -290,7 +287,7 @@ class _FlexibleSpaceBarState extends State<FlexibleSpaceBar> {
 
         // 0.0 -> Expanded
         // 1.0 -> Collapsed to toolbar
-        final double t = (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent).clamp(0.0, 1.0) as double;
+        final double t = (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent).clamp(0.0, 1.0);
 
         // background
         if (widget.background != null) {
@@ -344,25 +341,21 @@ class _FlexibleSpaceBarState extends State<FlexibleSpaceBar> {
           Widget title;
           switch (theme.platform) {
             case TargetPlatform.iOS:
-            case TargetPlatform.macOS:
               title = widget.title;
               break;
-            case TargetPlatform.android:
             case TargetPlatform.fuchsia:
-            case TargetPlatform.linux:
-            case TargetPlatform.windows:
+            case TargetPlatform.android:
               title = Semantics(
                 namesRoute: true,
                 child: widget.title,
               );
-              break;
           }
 
           // StretchMode.fadeTitle
           if (widget.stretchModes.contains(StretchMode.fadeTitle) &&
             constraints.maxHeight > settings.maxExtent) {
             final double stretchOpacity = 1 -
-              (((constraints.maxHeight - settings.maxExtent) / 100).clamp(0.0, 1.0) as double);
+              ((constraints.maxHeight - settings.maxExtent) / 100).clamp(0.0, 1.0);
             title = Opacity(
               opacity: stretchOpacity,
               child: title,
@@ -371,7 +364,7 @@ class _FlexibleSpaceBarState extends State<FlexibleSpaceBar> {
 
           final double opacity = settings.toolbarOpacity;
           if (opacity > 0.0) {
-            TextStyle titleStyle = theme.primaryTextTheme.headline6;
+            TextStyle titleStyle = theme.primaryTextTheme.title;
             titleStyle = titleStyle.copyWith(
               color: titleStyle.color.withOpacity(opacity)
             );
@@ -394,15 +387,7 @@ class _FlexibleSpaceBarState extends State<FlexibleSpaceBar> {
                   alignment: titleAlignment,
                   child: DefaultTextStyle(
                     style: titleStyle,
-                    child: LayoutBuilder(
-                      builder: (BuildContext context, BoxConstraints constraints) {
-                        return Container(
-                          width: constraints.maxWidth / scaleValue,
-                          alignment: titleAlignment,
-                          child: title,
-                        );
-                      }
-                    ),
+                    child: title,
                   ),
                 ),
               ),
