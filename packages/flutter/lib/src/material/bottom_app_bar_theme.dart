@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -25,7 +25,7 @@ import 'theme.dart';
 ///
 ///  * [ThemeData], which describes the overall theme information for the
 ///    application.
-class BottomAppBarTheme with Diagnosticable {
+class BottomAppBarTheme extends Diagnosticable {
   /// Creates a theme that can be used for [ThemeData.BottomAppBarTheme].
   const BottomAppBarTheme({
     this.color,
@@ -87,15 +87,15 @@ class BottomAppBarTheme with Diagnosticable {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     if (identical(this, other))
       return true;
     if (other.runtimeType != runtimeType)
       return false;
-    return other is BottomAppBarTheme
-        && other.color == color
-        && other.elevation == elevation
-        && other.shape == shape;
+    final BottomAppBarTheme typedOther = other;
+    return typedOther.color == color
+        && typedOther.elevation == elevation
+        && typedOther.shape == shape;
   }
 
   @override

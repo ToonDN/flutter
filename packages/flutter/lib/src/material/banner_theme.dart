@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -23,7 +23,7 @@ import 'theme.dart';
 ///
 ///  * [ThemeData], which describes the overall theme information for the
 ///    application.
-class MaterialBannerThemeData with Diagnosticable {
+class MaterialBannerThemeData extends Diagnosticable {
 
   /// Creates a theme that can be used for [MaterialBannerTheme] or
   /// [ThemeData.bannerTheme].
@@ -73,8 +73,8 @@ class MaterialBannerThemeData with Diagnosticable {
     return MaterialBannerThemeData(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       contentTextStyle: TextStyle.lerp(a?.contentTextStyle, b?.contentTextStyle, t),
-      padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
-      leadingPadding: EdgeInsetsGeometry.lerp(a?.leadingPadding, b?.leadingPadding, t),
+      padding: EdgeInsets.lerp(a?.padding, b?.padding, t),
+      leadingPadding: EdgeInsets.lerp(a?.leadingPadding, b?.leadingPadding, t),
     );
   }
 
@@ -89,16 +89,16 @@ class MaterialBannerThemeData with Diagnosticable {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     if (identical(this, other))
       return true;
     if (other.runtimeType != runtimeType)
       return false;
-    return other is MaterialBannerThemeData
-        && other.backgroundColor == backgroundColor
-        && other.contentTextStyle == contentTextStyle
-        && other.padding == padding
-        && other.leadingPadding == leadingPadding;
+    final MaterialBannerThemeData typedOther = other;
+    return typedOther.backgroundColor == backgroundColor
+        && typedOther.contentTextStyle == contentTextStyle
+        && typedOther.padding == padding
+        && typedOther.leadingPadding == leadingPadding;
   }
 
   @override
